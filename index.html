@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- Demonstration of sending form data from frontend to the backend -->
+    <form action="">
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name">
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email">
+        <label for="pass">Password:</label>
+        <input type="password" name="pass" id="pass">
+        <label for="confirmPass">Confirm Password:</label>
+        <input type="password" name="confirmPass" id="cpass">
+    </form>
+    <button id="submit">Submit</button>
+
+</body>
+<script>
+    let btn = document.getElementById('submit');
+btn.addEventListener('click', async (e) => {
+
+    e.preventDefault();
+    let email = document.getElementById('email').value;
+    let name = document.getElementById('name').value;
+    let password = document.getElementById('pass').value;
+    let confirmPassword = document.getElementById('cpass').value;
+
+    let obj = { email, name, password, confirmPassword };
+
+    let resp = await fetch('/auth/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(obj) });
+    console.log("Response: ", resp);
+})
+</script>
+
+</html>
