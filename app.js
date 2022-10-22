@@ -4,7 +4,7 @@ const app = express();
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const userRouter = require('./Routers/userRouter');
-const authRouter = require('./Routers/authRouter');
+// const authRouter = require('./Routers/authRouter');
 
 app.listen(8080, () => {
     console.log("App listening on port 8080");
@@ -16,10 +16,10 @@ app.use(express.json());
 app.use(cookieParser());
 
 //Authentication ROutes
-app.use('/auth', authRouter);
+// app.use('/auth', authRouter);
 
 //User Routes
-app.use('/users', userRouter);
+app.use('/user', userRouter);
 
 //DB-Connection
 const pass = 'gWSQGcq6JRw92kk';

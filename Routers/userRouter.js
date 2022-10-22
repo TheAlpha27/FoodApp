@@ -1,16 +1,42 @@
+const { application } = require('express');
 const express = require('express');
 // const userModel = require('../Models/userModel');
-const protectRoute = require('../Controllers/authHelper');
-const {createUser, getUsers, updateUser, deleteUser} = require('../Controllers/userController');
+const { getUser, getAllUsers, updateUser, deleteUser } = require('../Controllers/userController');
+const { getSignUp, postSignUp, loginUser, isAuthorised, protectRoute } = require('../Controllers/authController');
+
 //User Routes
 const userRouter = express.Router();
 
+//Login Signup
+userRouter
+    .route('/signup')
+    .get(getSignUp)
+    .post(postSignUp);
 
+userRouter
+    .route('/login')
+    .post(loginUser);
 
-userRouter.route('/')
-    .get(protectRoute, getUsers)
+//User Options
+userRouter
+    .route('/:id')
     .patch(updateUser)
     .delete(deleteUser);
+
+//Profile Page
+userRouter.use(protectRoute);
+userRouter
+    .route('/userprofile')
+    .get(getUser);
+
+//Admin Specific functions
+userRouter.use(isAuthorised(['admin']));
+userRouter
+    .route('/')
+    .get(getAllUsers);
+
+
+
 
 //Cookies
 // const setCookies = (req, res) => {

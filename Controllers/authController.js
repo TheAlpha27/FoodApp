@@ -28,8 +28,8 @@ const loginUser = async (req, res) => {
 
                     //Implementing JWT
                     let payload = user['_id']; //gets user's id as payload for jwt
-                    let token = jwt.sign({payload: payload}, JWT_KEY); //Creates signature
-                    res.cookie('login', token, {httpOnly: true}); //Saves the jwt in cookies
+                    let token = jwt.sign({ payload: payload }, JWT_KEY); //Creates signature
+                    res.cookie('login', token, { httpOnly: true }); //Saves the jwt in cookies
 
                     return res.json({
                         msg: "User has logged in succesfully",
@@ -53,8 +53,49 @@ const loginUser = async (req, res) => {
     }
 }
 
+const isAuthorised = (roles) => {
+    return function(req, res, next){
+        // console.log(req.id, req.role);
+        if(roles.includes(req.role) == true){ //Checks if the req object contains the role which is authorized and included in the roles array in the parameter function
+            next();
+        }
+        else{
+            res.status(401).json({
+                msg: "Operation not allowed"
+            })
+        }
+    }
+}
+
+const protectRoute = async (req, res, next) => {
+    // console.log(req.cookies.isLoggedIn);
+    let token;
+    if (req.cookies.login) {
+        token = req.cookies.login;
+        let payload = jwt.verify(req.cookies.login, JWT_KEY);
+        if(payload){
+            // console.log("Payload: ", payload);
+            const user = await userModel.findById(payload.payload);
+            // console.log("User: ", user._id);
+            req.role = user.role;
+            req.id = user._id;
+            next();
+        }
+        else{
+            return res.json({
+                msg: "User not verified"
+            })
+        }
+    }
+    else {
+        return res.json("Operation not allowed, please login");
+    }
+}
+
 module.exports = {
     getSignUp,
     postSignUp,
-    loginUser
+    loginUser,
+    isAuthorised,
+    protectRoute
 }
