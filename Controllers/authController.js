@@ -54,12 +54,12 @@ const loginUser = async (req, res) => {
 }
 
 const isAuthorised = (roles) => {
-    return function(req, res, next){
+    return function (req, res, next) {
         // console.log(req.id, req.role);
-        if(roles.includes(req.role) == true){ //Checks if the req object contains the role which is authorized and included in the roles array in the parameter function
+        if (roles.includes(req.role) == true) { //Checks if the req object contains the role which is authorized and included in the roles array in the parameter function
             next();
         }
-        else{
+        else {
             res.status(401).json({
                 msg: "Operation not allowed"
             })
@@ -73,7 +73,7 @@ const protectRoute = async (req, res, next) => {
     if (req.cookies.login) {
         token = req.cookies.login;
         let payload = jwt.verify(req.cookies.login, JWT_KEY);
-        if(payload){
+        if (payload) {
             // console.log("Payload: ", payload);
             const user = await userModel.findById(payload.payload);
             // console.log("User: ", user._id);
@@ -81,7 +81,7 @@ const protectRoute = async (req, res, next) => {
             req.id = user._id;
             next();
         }
-        else{
+        else {
             return res.json({
                 msg: "User not verified"
             })
@@ -92,10 +92,43 @@ const protectRoute = async (req, res, next) => {
     }
 }
 
+const forgetPassword = async (req, res) => {
+    let { email } = req.body;
+    try {
+        const user = await userModel.findOne({ email: email });
+        const resetToken = user.createResetToken(); //Custom method to create resetToken
+        let resetPasswordLink = `${req.protocol}://${req.get('host')}/resetpassword/${resetToken}`;
+        //send mail to user using nodemailer
+    } catch (error) {
+        res.json({
+            msg: error
+        })
+    }
+}
+
+const resetPassword = async (req, res) => {
+    try {
+        const token = req.params.token;
+        let { password, confirmPassword } = req.body;
+        const user = await userModel.findOne({ resetToken: token });
+        user.resetPasswordHandler(password, confirmPassword); //Custom method to reset the password
+        await user.save();
+        res.json({
+            msg: "Password changed successfully"
+        })
+    } catch (error) {
+        res.json({
+            msg: error
+        })
+    }
+}
+
 module.exports = {
     getSignUp,
     postSignUp,
     loginUser,
     isAuthorised,
-    protectRoute
+    protectRoute,
+    forgetPassword,
+    resetPassword
 }

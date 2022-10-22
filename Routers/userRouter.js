@@ -1,8 +1,7 @@
-const { application } = require('express');
 const express = require('express');
 // const userModel = require('../Models/userModel');
 const { getUser, getAllUsers, updateUser, deleteUser } = require('../Controllers/userController');
-const { getSignUp, postSignUp, loginUser, isAuthorised, protectRoute } = require('../Controllers/authController');
+const { getSignUp, postSignUp, loginUser, isAuthorised, protectRoute, forgetPassword, resetPassword } = require('../Controllers/authController');
 
 //User Routes
 const userRouter = express.Router();
@@ -22,6 +21,14 @@ userRouter
     .route('/:id')
     .patch(updateUser)
     .delete(deleteUser);
+
+userRouter
+    .route('/forgetpassword')
+    .post(forgetPassword);
+
+userRouter
+    .route('/resetpassword/:token')
+    .post(resetPassword);
 
 //Profile Page
 userRouter.use(protectRoute);
