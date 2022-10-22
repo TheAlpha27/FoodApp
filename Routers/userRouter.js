@@ -1,7 +1,7 @@
 const express = require('express');
 // const userModel = require('../Models/userModel');
 const { getUser, getAllUsers, updateUser, deleteUser } = require('../Controllers/userController');
-const { getSignUp, postSignUp, loginUser, isAuthorised, protectRoute, forgetPassword, resetPassword } = require('../Controllers/authController');
+const { getSignUp, postSignUp, loginUser, isAuthorised, protectRoute, forgetPassword, resetPassword, logout } = require('../Controllers/authController');
 
 //User Routes
 const userRouter = express.Router();
@@ -30,6 +30,10 @@ userRouter
     .route('/resetpassword/:token')
     .post(resetPassword);
 
+userRouter
+    .route('/logout')
+    .post(logout);
+    
 //Profile Page
 userRouter.use(protectRoute);
 userRouter
@@ -41,8 +45,6 @@ userRouter.use(isAuthorised(['admin']));
 userRouter
     .route('/')
     .get(getAllUsers);
-
-
 
 
 //Cookies

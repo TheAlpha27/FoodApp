@@ -82,9 +82,15 @@ const protectRoute = async (req, res, next) => {
             next();
         }
         else {
-            return res.json({
-                msg: "User not verified"
-            })
+            const client = req.get('User-Agent'); //fetches info if req is made from browser or postman type apps
+            if (client.includes('Mozilla') == true) {//req is from browser
+                return res.redirect('/login');
+            }
+            else {
+                return res.json({ //req is from external softwares
+                    msg: "User not verified"
+                })
+            }
         }
     }
     else {
@@ -123,6 +129,13 @@ const resetPassword = async (req, res) => {
     }
 }
 
+const logout = (req, res) => {
+    res.cookie('login', ' ', { maxAge: 1 });
+    res.json({
+        msg: "User logged out successfully"
+    });
+}
+
 module.exports = {
     getSignUp,
     postSignUp,
@@ -130,5 +143,6 @@ module.exports = {
     isAuthorised,
     protectRoute,
     forgetPassword,
-    resetPassword
+    resetPassword,
+    logout
 }
