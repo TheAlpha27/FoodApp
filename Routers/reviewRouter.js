@@ -19,10 +19,8 @@ reviewRouter.use(protectRoute);
 reviewRouter
     .route('/crud/:plan')
     .post(createReview)
-
-reviewRouter
-    .route('/crud/:id')
     .patch(updateReview)
     .delete(deleteReview)
+    
 
 module.exports = reviewRouter;

@@ -49,9 +49,14 @@ const getPlanReviews = async (req, res) => {
         let data = reviews.filter((e)=>{
             return e.plan._id == planId;
         })
+        if(data)
         res.json({
             msg: "Reviews found",
             data: data
+        })
+        else
+        res.json({
+            msg: "No Reviews found"
         })
     } catch (error) {
         res.status(500).send(error);
@@ -83,8 +88,17 @@ const createReview = async (req, res) => {
 }
 
 const updateReview = async (req, res) => {
-    let id = req.params.id;
+    let planID = req.params.plan;
+    //Review ID from fronted
     let data = req.body;
+    let id = data.id;
+    if(data.rating !== undefined)
+    {
+        let plan = await planModel.findById(planID);
+        let reviewData = await reviewModel.findById(id);
+        plan.ratingsAverage = (plan.ratingsAverage - reviewData.rating + data.rating)/plan.reviewCount;
+        let planConfirm = await planModel.findByIdAndUpdate(planID, plan);
+    }
     let review = await reviewModel.findByIdAndUpdate(id, data);
     if (review) {
         res.json({
@@ -100,7 +114,9 @@ const updateReview = async (req, res) => {
 }
 
 const deleteReview = async (req, res) => {
-    let id = req.params.id;
+    // let planID = req.params.plan;
+    //Review ID from fronted
+    let id = req.body.id;
     let data = await reviewModel.findByIdAndDelete(id);
     if (data) {
         res.json({
