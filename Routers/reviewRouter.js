@@ -4,7 +4,7 @@ const reviewRouter = express.Router();
 const {getAllReviews, top3Reviews, getPlanReviews, createReview, updateReview, deleteReview} = require('../Controllers/reviewController');
 
 reviewRouter
-    .route('/reviews')
+    .route('/all')
     .get(getAllReviews)
 
 reviewRouter
@@ -17,11 +17,11 @@ reviewRouter
 
 reviewRouter.use(protectRoute);
 reviewRouter
-    .route('/:plan')
+    .route('/crud/:plan')
     .post(createReview)
 
 reviewRouter
-    .route('/:id')
+    .route('/crud/:id')
     .patch(updateReview)
     .delete(deleteReview)
 

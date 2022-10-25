@@ -29,7 +29,7 @@ const top3Reviews = async (req, res) => {
         if (reviews) {
             res.json({
                 msg: "Top 3 reviews found",
-                data: top3Reviews
+                data: reviews
             })
         }
         else {
@@ -44,19 +44,15 @@ const top3Reviews = async (req, res) => {
 
 const getPlanReviews = async (req, res) => {
     try {
-        let id = req.params.id;
-        const review = await reviewModel.findById(id);
-        if (review) {
-            res.json({
-                msg: "Top 3 reviews found",
-                data: review
-            })
-        }
-        else {
-            res.json({
-                msg: "Review not found"
-            })
-        }
+        let planId = req.params.id;
+        let reviews = await reviewModel.find();
+        let data = reviews.filter((e)=>{
+            return e.plan._id == planId;
+        })
+        res.json({
+            msg: "Reviews found",
+            data: data
+        })
     } catch (error) {
         res.status(500).send(error);
     }
@@ -65,7 +61,10 @@ const getPlanReviews = async (req, res) => {
 const createReview = async (req, res) => {
     let id = req.params.plan;
     let plan = await planModel.findById(id);
-    let review = await reviewModel.create(req.body);
+    let reviewData = req.body;
+    reviewData.plan = id;
+    reviewData.user = req.id;
+    let review = await reviewModel.create(reviewData);
     plan.reviewCount = plan.reviewCount + 1;
     plan.ratingsAverage = (plan.ratingsAverage + req.body.rating) / plan.reviewCount;
     let planData = await planModel.findByIdAndUpdate(id, plan);

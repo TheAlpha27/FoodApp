@@ -16,7 +16,10 @@ const planSchema = new mongoose.Schema({
         required: [true, 'Price not entered'] //msg is shown when price is not entered
     },
     ratingsAverage: {
-        type: Number
+        type: Number,
+        default: 0,
+        min: 0,
+        max: 5
     },
     reviewCount: {
         type: Number,
