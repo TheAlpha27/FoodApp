@@ -9,7 +9,7 @@ planRouter
     .get(getAllPlans);
 
 planRouter
-    .route('/top3plans')
+    .route('/top3')
     .get(top3Plans);
 
 //Own Plans
