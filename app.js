@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const userRouter = require('./Routers/userRouter');
 const planRouter = require('./Routers/planRouter');
 const reviewRouter = require('./Routers/reviewRouter');
+const bookingRouter = require('./Routers/bookingRouter');
 // const authRouter = require('./Routers/authRouter');
 
 app.listen(8080, () => {
@@ -28,6 +29,9 @@ app.use('/plan', planRouter);
 
 //Review Routes
 app.use('/review', reviewRouter);
+
+//Payment Routes
+app.use('/payment', bookingRouter);
 
 //DB-Connection
 const pass = 'gWSQGcq6JRw92kk';

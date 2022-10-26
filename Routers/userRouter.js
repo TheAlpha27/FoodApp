@@ -1,7 +1,9 @@
 const express = require('express');
 // const userModel = require('../Models/userModel');
-const { getUser, getAllUsers, updateUser, deleteUser } = require('../Controllers/userController');
+const { getUser, getAllUsers, updateUser, deleteUser, updateProfileImage } = require('../Controllers/userController');
 const { getSignUp, postSignUp, loginUser, isAuthorised, protectRoute, forgetPassword, resetPassword, logout } = require('../Controllers/authController');
+const multer = require('multer');
+const path = require('path');
 
 //User Routes
 const userRouter = express.Router();
@@ -33,7 +35,40 @@ userRouter
 userRouter
     .route('/logout')
     .post(logout);
-    
+
+//Multer Routes
+
+//upload -> storage, filter
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/images')
+    },
+    filename: (req, file, cb) => {
+        // console.log(file);
+        cb(null, `user-${Date.now()}.jpeg`);
+    }
+});
+
+const filter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image')) {
+        cb(null, true)
+    }
+    else {
+        cb(new Error("Not an Image! Please upload an image file"), false)
+    }
+};
+
+const upload = multer({
+    storage: storage,
+    fileFilter: filter
+});
+
+userRouter.get('/profileimage', (req, res) => {
+    res.sendFile('/home/thealpha27/code/backend/FoodApp/multer.html')
+})
+
+userRouter.post('/profileimage', upload.single("image"), updateProfileImage);
+
 //Profile Page
 userRouter.use(protectRoute);
 userRouter
@@ -45,7 +80,6 @@ userRouter.use(isAuthorised(['admin']));
 userRouter
     .route('/')
     .get(getAllUsers);
-
 
 //Cookies
 // const setCookies = (req, res) => {

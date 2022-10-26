@@ -39,7 +39,6 @@ const getUser = async (req, res) => {
 
 }
 
-
 //Update
 // const updateUser = async (req, res) => {
 //     let uid = req.params.id;
@@ -89,9 +88,16 @@ const deleteUser = async (req, res) => {
     })
 };
 
+const updateProfileImage = (req, res) => {
+    res.json({
+        msg: "Profile Image Uploaded"
+    })
+}
+
 module.exports = {
     getAllUsers,
     getUser,
     updateUser,
-    deleteUser
+    deleteUser,
+    updateProfileImage
 };
