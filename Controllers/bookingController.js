@@ -1,5 +1,6 @@
 // This is your test secret API key.
-const SK = "sk_test_51LwriOSENOJwoNfsoDqDa2IvsVugv67ctBtbnzgO31m7sYXXcARXshdXBUQkr7qUwj8v2PuL2wJeBBK1g61kGK1o00qxTk8MOR";
+require('dotenv').config();
+const SK = process.env.STRIPE_KEY;
 const stripe = require('stripe')(SK);
 const planModel = require('../Models/planModel');
 const userModel = require('../Models/userModel');

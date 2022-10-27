@@ -1,6 +1,7 @@
 const userModel = require('../Models/userModel');
 const jwt = require('jsonwebtoken');
-const JWT_KEY = 'fdfewfdscdsf'; //Secret key for jwt
+require('dotenv').config();
+const JWT_KEY = process.env.JWT_KEY; //Secret key for jwt
 const sendMail = require('../utils/nodemailer');
 
 const getSignUp = (req, res) => {

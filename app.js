@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-
+require('dotenv').config();
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const userRouter = require('./Routers/userRouter');
@@ -34,7 +34,7 @@ app.use('/review', reviewRouter);
 app.use('/payment', bookingRouter);
 
 //DB-Connection
-const pass = 'gWSQGcq6JRw92kk';
+const pass = process.env.DB_PASS;
 
 mongoose.connect(`mongodb+srv://utsav1234:${pass}@cluster0.smirmus.mongodb.net/?retryWrites=true&w=majority`)
     .then((db) => {
